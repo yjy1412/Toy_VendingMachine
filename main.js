@@ -103,9 +103,13 @@ const insertCoin = async () => {
 const select = async () => {
   if (isFinished !== true) {
     // 사용자가 음료를 선택한다.
-    const picked = await question("어떤 상품을 선택하시겠습니까?(콜라 / 물 / 커피) >> ");
-    // 판매가능한 상품인지 확인한다.
-    if (!products.includes(picked)) {
+    const picked = await question(`어떤 상품을 선택하시겠습니까?(콜라 / 물 / 커피) 
+    거래 종료를 원하시는 "종료"라고 입력해주세요 >> `);
+    // 상품 선택과정에서 거래 종료를 원할 경우.
+    if (picked === "종료") {
+      finish();
+    } else if (!products.includes(picked)) {
+      // 판매가능한 상품인지 확인한다.
       console.log("상품은 [콜라], [물], [커피] 중에서만 선택할 수 있습니다.");
       await select();
     } else if (balance < priceList[picked]) {
@@ -176,9 +180,12 @@ const payForCard = () => {
 const selectForCard = async () => {
   if (isFinished !== true) {
     // 사용자가 음료를 선택한다.
-    const picked = await question("어떤 상품을 선택하시겠습니까?(콜라 / 물 / 커피) >> ");
-    // 판매가능한 상품인지 확인한다.
-    if (!products.includes(picked)) {
+    const picked = await question(`어떤 상품을 선택하시겠습니까?(콜라 / 물 / 커피) 
+    거래 종료를 원하시는 "종료"라고 입력해주세요 >> `);
+    if (picked === "종료") {
+      finish();
+    } else if (!products.includes(picked)) {
+      // 판매가능한 상품인지 확인한다.
       console.log("상품은 [콜라], [물], [커피] 중에서만 선택할 수 있습니다.");
       await selectForCard();
     } else {
