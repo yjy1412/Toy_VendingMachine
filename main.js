@@ -8,15 +8,15 @@ const priceList = { "콜라": 1100, "물": 600, "커피": 700 } // 판매상품 
 const products = Object.keys(priceList);
 const coinList = ["100", "500", "1000", "5000", "10000"]; // 사용가능한 화폐단위 리스트
 let payment = ''; // 지불수단
-let balance = 0; // 잔액
-let isFinished = false; // 거래를 강제종료
+let balance = 0; // 남은잔액
+let isFinished = false; // 거래 종료 여부
 
-// 사용자에게 어떻게 처리할지 요청하는 로직
+// 사용자 인터페이스
 const question = (theQuestion) => {
   return new Promise(resolve => rl.question(theQuestion, answ => resolve(answ)))
 }
 
-// 프로세스 진행 중, 종료하고 잔돈을 반환받고 싶은 경우 요청하는 로직
+// 거래 진행 중 종료 요청
 const requestForChange = async () => {
   let isOk = true;
   let answer = '';
@@ -30,13 +30,13 @@ const requestForChange = async () => {
   return answer;
 }
 
-// 로직에 따른 프로세스 강제 종료
+// 거래 종료 프로세스
 const finish = () => {
   console.log('거래를 종료합니다. 잔돈반환 : ' + balance);
   isFinished = true;
 }
 
-// 결제수단 선택
+// 결제수단 선택 로직
 const paymentCheck = async () => {
   const answer = await question("결제수단을 선택해주세요 >> ");
   payment = answer;
@@ -56,8 +56,8 @@ const paymentCheck = async () => {
   }
 }
 
-// 현금투입
-const inserCoin = async () => {
+// 현금투입 로직
+const insertCoin = async () => {
   if (isFinished !== true) {
     // 현금을 투입받고, 사용할 수 없는 화폐단위인 경우, 다시 반환한다.
     const coinValue = await question("화폐단위를 입력해주세요 >> ");
@@ -65,7 +65,7 @@ const inserCoin = async () => {
     if (!coinList.includes(coinValue) || isNaN(coinQuantity)) {
       console.log("현금 투입을 정확하게 해주시길 바랍니다");
       console.log("투입된 현금은 반환됩니다.");
-      await inserCoin();
+      await insertCoin();
       return;
     }
 
@@ -88,7 +88,7 @@ const inserCoin = async () => {
 
     if (answer === "Yes") {
       // 현금투입을 계속하길 원하는 경우.
-      await inserCoin();
+      await insertCoin();
     } else {
       // 현금투입을 멈추는 경우.
       const finishAnsw = await requestForChange();
@@ -99,7 +99,7 @@ const inserCoin = async () => {
   }
 }
 
-// 상품선택 및 결제
+// 상품선택 및 결제 로직
 const select = async () => {
   if (isFinished !== true) {
     // 사용자가 음료를 선택한다.
@@ -124,7 +124,7 @@ const select = async () => {
 
       // 현금 추가투입을 원하는 경우.
       if (answer === "Yes") {
-        await inserCoin();
+        await insertCoin();
         await select();
       } else {
         // 현금 추가투입을 원치 않는 경우.
@@ -193,7 +193,7 @@ const main = async () => {
   await paymentCheck();
   if (payment === "현금") {
     // 결제수단이 현금인 경우.
-    await inserCoin();
+    await insertCoin();
     await select();
   } else {
     // 결제수단이 카드인 경우.
