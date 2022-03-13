@@ -1,5 +1,3 @@
-const { rejects } = require("assert");
-const { resolve } = require("path/posix");
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
@@ -185,7 +183,7 @@ const selectForCard = async () => {
       await selectForCard();
     } else {
       console.log(`짜잔!! 선택하신 음료 [${picked}] 나왔습니다!!`);
-      console.log(`${priceList[picked]} 결재되었습니다.`);
+      console.log(`상품금액 ${priceList[picked]}원이 결재되었습니다.`);
     }
   }
 }
@@ -202,7 +200,6 @@ const main = async () => {
     await payForCard();
     await selectForCard();
   }
-
   rl.close()
 }
 main();
