@@ -174,7 +174,13 @@ const select = async () => {
 const payForCard = () => {
   // 해당 카드사에 결재승인을 받는다.
   console.log("결재승인 요청중입니다...")
-  console.log("결제승인이 완료됐습니다")
+  return new Promise((resolve, reject) => {
+    setTimeout(()=>{ 
+      console.log("결재승인이 완료되었습니다!");
+      resolve();
+    }, 3000)
+  })
+    .catch(err => console.log(err))
 }
 
 const selectForCard = async () => {
